@@ -86,8 +86,8 @@ def main():
 
     State.metadata.create_all(engine)
     Constituency.metadata.create_all(engine)
-    # Vote.metadata.create_all(engine)
-    # Party.metadata.create_all(engine)
+    Vote.metadata.create_all(engine)
+    Party.metadata.create_all(engine)
     Base.metadata.create_all(engine)
 
     mystate = State(name='berlin')
