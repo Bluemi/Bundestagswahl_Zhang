@@ -10,6 +10,8 @@ def main():
     add_states(get_states(frame), session)
     add_constituencies(frame, session)
 
+    print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
+
 
 def add_states(states, session):
     """
