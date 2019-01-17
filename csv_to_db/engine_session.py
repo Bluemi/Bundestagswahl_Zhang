@@ -37,8 +37,8 @@ class Vote(Base):
     second_vote = Column(Integer)
 
     # relations
-    constituency = relationship('Constituency', back_populates='party')
-    party = relationship('Party', back_populates='constituency')
+    constituency = relationship('Constituency', back_populates='parties')
+    party = relationship('Party', back_populates='constituencies')
 
 
 class Constituency(Base):
@@ -60,7 +60,7 @@ class Constituency(Base):
     state = relationship('State', back_populates='constituencies')
 
     # vote/party relation
-    party = relationship('Vote', back_populates='constituency')
+    parties = relationship('Vote', back_populates='constituency')
 
 
 class Party(Base):
@@ -74,7 +74,7 @@ class Party(Base):
     name = Column(String)
 
     # vote/constituency relation
-    constituency = relationship('Vote', back_populates='party')
+    constituencies = relationship('Vote', back_populates='party')
 
 
 def create_engine_session():

@@ -1,5 +1,5 @@
 from parser import pandas_frame_from_csv_path, get_states, get_constituency_of
-from engine_session import create_engine_session, State, Constituency
+from engine_session import create_engine_session, State, Constituency, Party
 
 
 def main():
@@ -9,8 +9,10 @@ def main():
 
     add_states(get_states(frame), session)
     add_constituencies(frame, session)
+    add_parties(frame, session)
+    add_votes(frame, session)
 
-    print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
+    # print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
 
 
 def add_states(states, session):
@@ -46,6 +48,31 @@ def add_constituencies(frame, session):
         for constituency_name in constituency['Gebiet']:
             db_constituency = Constituency(name=constituency_name, state=db_state)
             session.add(db_constituency)
+
+
+def add_parties(frame, session):
+    """
+    Adds the parties given in frame to session.
+
+    :param frame: The pandas frame from where to extract the parties.
+    :param session: The current sqlalchemy session
+    """
+    # magic: Cuts away NaN Values and unneeded information
+    parties = frame.iloc[0][19:].index[0::4][:-2]
+
+    for party_name in parties:
+        db_party = Party(name=party_name)
+        session.add(db_party)
+
+
+def add_votes(frame, session):
+    """
+    Adds the votes given in frame to session.
+
+    :param frame: The pandas frame from where to extract the votes.
+    :param session: The current sqlalchemy session
+    """
+    raise NotImplementedError
 
 
 if __name__ == '__main__':
