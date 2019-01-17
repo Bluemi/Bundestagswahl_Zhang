@@ -1,5 +1,5 @@
 from parser import pandas_frame_from_csv_path, get_states, get_constituency_of
-from engine_session import create_engine_session, State, Constituency, Party
+from engine_session import create_engine_session, State, Constituency, Party, Vote
 
 
 def main():
@@ -65,6 +65,19 @@ def add_parties(frame, session):
         session.add(db_party)
 
 
+def get_votes(frame, party, constituency):
+    """
+    Extracts the first and second vote of the given party in the given constituency as tuple.
+
+    :param frame: The pandas frame from where to extract the votes.
+    :param party: The given party
+    :param constituency: The given constituency
+    :return: (first_voice, second_voice)
+    """
+    print(frame[party.name])
+    raise NotImplementedError
+
+
 def add_votes(frame, session):
     """
     Adds the votes given in frame to session.
@@ -72,7 +85,16 @@ def add_votes(frame, session):
     :param frame: The pandas frame from where to extract the votes.
     :param session: The current sqlalchemy session
     """
-    raise NotImplementedError
+    constituencies = session.query(Constituency).all()
+    parties = session.query(Party).all()
+
+    for party in parties:
+        for constituency in constituencies:
+            first_votes, second_votes = get_votes(frame, party, constituency)
+            db_vote = Vote(first_vote=first_votes, second_vote=second_votes, constituency=constituency, party=party)
+            session.add(db_vote)
+
+    session.commit()
 
 
 if __name__ == '__main__':
