@@ -1,5 +1,8 @@
+import math
+
 from parser import pandas_frame_from_csv_path, get_states, get_constituency_of
 from engine_session import create_engine_session, State, Constituency, Party, Vote
+from tqdm import tqdm
 
 
 def main():
@@ -10,9 +13,10 @@ def main():
     add_states(get_states(frame), session)
     add_constituencies(frame, session)
     add_parties(frame, session)
+
     add_votes(frame, session)
 
-    # print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
+    print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
 
 
 def add_states(states, session):
@@ -23,7 +27,7 @@ def add_states(states, session):
     :param session: The current sqlalchemy session.
     """
 
-    for state_name in states['Gebiet']:
+    for state_name in tqdm(states['Gebiet'], desc='adding states'):
         db_state = State(name=state_name)
         session.add(db_state)
 
@@ -40,7 +44,7 @@ def add_constituencies(frame, session):
 
     states = get_states(frame)
 
-    for state_nr, state_name in zip(states['Nr'], states['Gebiet']):
+    for state_nr, state_name in tqdm(zip(states['Nr'], states['Gebiet']), desc='adding constituencies', total=16):
         db_state = session.query(State).filter_by(name=state_name).first()
 
         constituency = get_constituency_of(frame, state_nr)
@@ -48,6 +52,8 @@ def add_constituencies(frame, session):
         for constituency_name in constituency['Gebiet']:
             db_constituency = Constituency(name=constituency_name, state=db_state)
             session.add(db_constituency)
+
+    session.commit()
 
 
 def add_parties(frame, session):
@@ -58,11 +64,13 @@ def add_parties(frame, session):
     :param session: The current sqlalchemy session
     """
     # magic: Cuts away NaN Values and unneeded information
-    parties = frame.iloc[0][19:].index[0::4][:-2]
+    parties = frame.iloc[0][19:].index[0::4][:-1]
 
-    for party_name in parties:
+    for party_name in tqdm(parties, desc='adding parties'):
         db_party = Party(name=party_name)
         session.add(db_party)
+
+    session.commit()
 
 
 def get_votes(frame, party, constituency):
@@ -74,8 +82,18 @@ def get_votes(frame, party, constituency):
     :param constituency: The given constituency
     :return: (first_voice, second_voice)
     """
-    print(frame[party.name])
-    raise NotImplementedError
+    # print('party.name: {}'.format(party.name))
+    new_frame = frame[frame['Gebiet'] == constituency.name].loc[:, party.name:]
+
+    first_vote = new_frame.iloc[:, 0]
+    second_vote = new_frame.iloc[:, 2]
+
+    if math.isnan(first_vote):
+        first_vote = 0
+    if math.isnan(second_vote):
+        second_vote = 0
+
+    return int(first_vote), int(second_vote)
 
 
 def add_votes(frame, session):
@@ -88,7 +106,7 @@ def add_votes(frame, session):
     constituencies = session.query(Constituency).all()
     parties = session.query(Party).all()
 
-    for party in parties:
+    for party in tqdm(parties, desc='adding votes'):
         for constituency in constituencies:
             first_votes, second_votes = get_votes(frame, party, constituency)
             db_vote = Vote(first_vote=first_votes, second_vote=second_votes, constituency=constituency, party=party)
