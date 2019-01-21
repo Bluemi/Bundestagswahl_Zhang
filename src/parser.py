@@ -3,10 +3,30 @@ import os
 import pandas as pd
 
 
-def main():
-    frame = pandas_frame_from_csv_path('../btw17_kerg.csv', lines_to_skip=2, sep=';')
+def _normalize_string(s):
+    s = s.replace('–', '-')
+    s = s.replace(' - ', '-')
+    return s.replace(' ', '-')
 
-    print(get_constituency_of(frame, 1))
+
+def normalize_if_str(x):
+    if type(x) == str:
+        return _normalize_string(x)
+    else:
+        return x
+
+
+def normalize_data_frame(frame):
+    """
+    Normalizes strings inside the given frame.
+
+    :param frame: The frame to normalize.
+    """
+
+    for column_name in frame:
+        frame[column_name] = frame[column_name].map(normalize_if_str)
+
+    frame.columns = list(map(lambda c: _normalize_string(c), frame.columns))
 
 
 def pandas_frame_from_csv_path(path, lines_to_skip=0, sep=','):
@@ -56,7 +76,3 @@ def get_states(frame):
     """
 
     return get_constituency_of(frame, 99)
-
-
-if __name__ == '__main__':
-    main()

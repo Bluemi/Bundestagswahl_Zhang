@@ -1,6 +1,6 @@
 import math
 
-from parser import pandas_frame_from_csv_path, get_states, get_constituency_of
+from parser import pandas_frame_from_csv_path, get_states, get_constituency_of, normalize_data_frame
 from engine_session import create_session, State, Constituency, Party, Vote
 from tqdm import tqdm
 
@@ -9,14 +9,13 @@ def main():
     session = create_session()
 
     frame = pandas_frame_from_csv_path('../btw17_kerg.csv', lines_to_skip=2, sep=';')
+    # normalize_data_frame(frame)
 
     add_states(get_states(frame), session)
     add_constituencies(frame, session)
     add_parties(frame, session)
 
     add_votes(frame, session)
-
-    print(session.query(Constituency).filter_by(name='Hamburg-Wandsbek').first().state)
 
 
 def add_states(states, session):
