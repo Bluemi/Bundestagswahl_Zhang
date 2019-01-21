@@ -3,6 +3,8 @@ from sqlalchemy import Integer, Column, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
+DATABASE_URL = 'sqlite:///btw.db'
+
 Base = declarative_base()
 
 
@@ -77,8 +79,8 @@ class Party(Base):
     constituencies = relationship('Vote', back_populates='party')
 
 
-def create_engine_session():
-    engine = sqlalchemy.create_engine('sqlite:///:memory:')
+def create_session():
+    engine = sqlalchemy.create_engine(DATABASE_URL)
     Session = sessionmaker()
     Session.configure(bind=engine)
 
@@ -90,4 +92,4 @@ def create_engine_session():
     Party.metadata.create_all(engine)
     Base.metadata.create_all(engine)
 
-    return engine, session
+    return session

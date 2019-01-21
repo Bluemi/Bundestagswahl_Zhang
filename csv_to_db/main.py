@@ -1,12 +1,12 @@
 import math
 
 from parser import pandas_frame_from_csv_path, get_states, get_constituency_of
-from engine_session import create_engine_session, State, Constituency, Party, Vote
+from engine_session import create_session, State, Constituency, Party, Vote
 from tqdm import tqdm
 
 
 def main():
-    engine, session = create_engine_session()
+    session = create_session()
 
     frame = pandas_frame_from_csv_path('../btw17_kerg.csv', lines_to_skip=2, sep=';')
 
