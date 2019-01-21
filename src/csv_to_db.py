@@ -81,7 +81,6 @@ def get_votes(frame, party, constituency):
     :param constituency: The given constituency
     :return: (first_voice, second_voice)
     """
-    # print('party.name: {}'.format(party.name))
     new_frame = frame[frame['Gebiet'] == constituency.name].loc[:, party.name:]
 
     first_vote = new_frame.iloc[:, 0]
