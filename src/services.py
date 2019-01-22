@@ -1,14 +1,13 @@
 from engine_session import create_session, State, Constituency
-from flask import Flask, jsonify, abort
-
+from flask import Flask, jsonify, abort, render_template, Response
 app = Flask(__name__)
 
 db_session = create_session()
 
 
-@app.route('/')
-def start_page():
-    return '<h1>hello world!</h1>'
+@app.route('/<name>')
+def start_page(name):
+    return render_template(name);
 
 
 @app.route('/states')
@@ -45,4 +44,4 @@ def get_votes(constituency_id):
         abort(404)
 
 
-app.run(debug=True)
+app.run(debug=True, port=5000)

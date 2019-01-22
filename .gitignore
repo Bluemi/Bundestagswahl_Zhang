@@ -1,6 +1,5 @@
 .idea/
-rest/bin/
-rest/include/
-rest/lib/
+/venv
 __pycache__/
 /btw.db
+btw17_kerg.csv

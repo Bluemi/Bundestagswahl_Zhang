@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy import Integer, Column, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, relationship, scoped_session
 
 DATABASE_URL = 'sqlite:///btw.db'
 
@@ -79,10 +79,7 @@ class Party(Base):
 
 def create_session():
     engine = sqlalchemy.create_engine(DATABASE_URL)
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-
-    session = Session()
+    session = scoped_session(sessionmaker(bind=engine))
 
     State.metadata.create_all(engine)
     Constituency.metadata.create_all(engine)

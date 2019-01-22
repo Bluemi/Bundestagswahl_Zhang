@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <template id="constuency">
+    </template>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="controller.js"></script>
+
+</head>
+<body>
+    <div ng-app="app">
+        <div ng-controller="main-controller">
+            {%  raw  %}
+            <h1>Bundestagswahl 2017</h1>
+            <div ng-repeat="obj in region">
+                <div ng-click="openConstituency(obj.id)">
+                    <p >{{obj.id + ": " +obj.name}}</p>
+                    <div ng-repeat="item in constituency",ng-if="item.id === obj.id">
+                        <ul>{{ item.id + ": " + item.name}}</ul>
+                    </div>
+                </div>
+            </div>
+            {%  endraw  %}
+        </div>
+    </div>
+</body>
+</html>
+
