@@ -19,7 +19,7 @@
             <div ng-repeat="obj in region">
                 <div ng-click="openConstituency(obj.id)">
                     <p >{{obj.id + ": " +obj.name}}</p>
-                    <div ng-repeat="item in constituency",ng-if="item.id === obj.id">
+                    <div ng-repeat="item in constituency", ng-if="selectedRegion === obj.id">
                         <ul>{{ item.id + ": " + item.name}}</ul>
                     </div>
                 </div>
