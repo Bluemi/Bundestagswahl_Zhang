@@ -7,20 +7,32 @@
     <template id="constuency">
     </template>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-    <script src="controller.js"></script>
-
 </head>
 <body>
     <div ng-app="app">
         <div ng-controller="main-controller">
             {%  raw  %}
             <h1>Bundestagswahl 2017</h1>
-            <div ng-repeat="obj in region">
-                <div ng-click="openConstituency(obj.id)">
-                    <p >{{obj.id + ": " +obj.name}}</p>
-                    <div ng-repeat="item in constituency", ng-if="selectedRegion === obj.id">
-                        <ul>{{ item.id + ": " + item.name}}</ul>
+            <div class="container", ng-repeat="region in regions">
+                <div>
+                    <p ng-click="openConstituency(region.id)">{{region.id + ": " + region.name}}</p>
+                    <div ng-repeat="constituency in constituencies", ng-if="selectedRegion === region.id">
+                        <b ng-click="openDetails(constituency.id)">{{constituency.id + ": " + constituency.name}}</b>
+                            <div ng-if="selectedConstituency===constituency.id">
+                                <table>
+                                    <tr>
+                                        <th>Partei</th>
+                                        <th>Erststimme</th>
+                                        <th>Zweitstimme</th>
+                                    </tr>
+                                    <tr ng-repeat="party in partys", ng-if="selectedConstituency===constituency.id">
+                                        <td>{{party.party}}</td>
+                                        <td>{{party.first_vote}}</td>
+                                        <td>{{party.second_vote}}</td>
+                                    </tr>
+                                </table>
+                                <canvas id="myChart" width="400" height="400"></canvas>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -28,5 +40,11 @@
         </div>
     </div>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.0.3/angular-chart.min.js"></script>
+<script src="controller.js"></script>
+
 </html>
 
