@@ -4,41 +4,56 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <template id="constuency">
-    </template>
+    <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 <body>
-    <div ng-app="app">
-        <div ng-controller="main-controller">
-            {%  raw  %}
-            <h1>Bundestagswahl 2017</h1>
-            <div class="container", ng-repeat="region in regions">
+<div ng-app="app">
+    <div ng-controller="main-controller">
+        {%  raw  %}
+        <h1>Bundestagswahl 2017</h1>
+        <div>
+            <div id="container" ng-repeat="region in regions">
                 <div>
                     <p ng-click="openConstituency(region.id)">{{region.id + ": " + region.name}}</p>
-                    <div ng-repeat="constituency in constituencies", ng-if="selectedRegion === region.id">
-                        <b ng-click="openDetails(constituency.id)">{{constituency.id + ": " + constituency.name}}</b>
-                            <div ng-if="selectedConstituency===constituency.id">
-                                <table>
-                                    <tr>
-                                        <th>Partei</th>
-                                        <th>Erststimme</th>
-                                        <th>Zweitstimme</th>
-                                    </tr>
-                                    <tr ng-repeat="party in partys", ng-if="selectedConstituency===constituency.id">
-                                        <td>{{party.party}}</td>
-                                        <td>{{party.first_vote}}</td>
-                                        <td>{{party.second_vote}}</td>
-                                    </tr>
-                                </table>
-                                <canvas id="myChart" width="400" height="400"></canvas>
-                            </div>
+                </div>
+                <div ng-repeat="constituency in constituencies" , ng-if="selectedRegion === region.id">
+                    <b ng-click="openDetails(constituency.id)">{{constituency.id + ": " + constituency.name}}</b>
+                    <div ng-if="selectedConstituency===constituency.id">
+                        <table>
+                            <tr>
+                                <th>Partei</th>
+                                <th>Erststimme</th>
+                                <th>Zweitstimme</th>
+                            </tr>
+                            <tr ng-repeat="party in partys" , ng-if="selectedConstituency===constituency.id">
+                                <td>{{party.party}}</td>
+                                <td>{{party.first_vote}}</td>
+                                <td>{{party.second_vote}}</td>
+                            </tr>
+                        </table>
+                        <div ng-controller="PieCtrl" ,
+                             style="position: relative; height:200px; width:400px; display: flex">
+                            <canvas id="pie" class="chart chart-pie chart-xs ng-isolate-scope"
+                                    chart-data="data_1"
+                                    chart-labels="labels"
+                                    chart-options="options"
+                                    style="display: block;">
+                            </canvas>
+                            <canvas id="pie" class="chart chart-pie chart-xs ng-isolate-scope"
+                                    chart-data="data_2"
+                                    chart-labels="labels"
+                                    chart-options="options"
+                                    style="display: block;">
+                            </canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-            {%  endraw  %}
         </div>
+        {%  endraw  %}
     </div>
+</div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
