@@ -13,14 +13,20 @@
         {%  raw  %}
         <h1>Bundestagswahl 2017</h1>
         <div>
-            <div id="container" ng-repeat="region in regions">
+            <div style="display: flex">
+                <input type="text" ng-model="search" />
+                <button ng-click="searchFor()">Search</button>
+            </div>
+
+
+            <div class="container" ng-repeat="region in regions">
                 <div>
                     <p ng-click="openConstituency(region.id)">{{region.id + ": " + region.name}}</p>
                 </div>
                 <div ng-repeat="constituency in constituencies" , ng-if="selectedRegion === region.id">
                     <b ng-click="openDetails(constituency.id)">{{constituency.id + ": " + constituency.name}}</b>
                     <div ng-if="selectedConstituency===constituency.id">
-                        <table>
+                        <table frame="box">
                             <tr>
                                 <th>Partei</th>
                                 <th>Erststimme</th>
@@ -32,14 +38,16 @@
                                 <td>{{party.second_vote}}</td>
                             </tr>
                         </table>
-                        <div ng-controller="PieCtrl" ,
-                             style="position: relative; height:200px; width:400px; display: flex">
+                        <div ng-controller="PieCtrl",
+                             style="position: relative; height:200px; width:400px; display: flex;">
+                            <label>Erststimmen:</label>
                             <canvas id="pie" class="chart chart-pie chart-xs ng-isolate-scope"
                                     chart-data="data_1"
                                     chart-labels="labels"
                                     chart-options="options"
                                     style="display: block;">
                             </canvas>
+                            <label>Zweitstimmen:</label>
                             <canvas id="pie" class="chart chart-pie chart-xs ng-isolate-scope"
                                     chart-data="data_2"
                                     chart-labels="labels"

@@ -1,9 +1,9 @@
-#container > div
+.container > div
 {
     display: inline-block;
     border: solid 1px #000;
 }
-#container
+.container
 {
     border: solid 1px #ff0000;
     text-align: center;

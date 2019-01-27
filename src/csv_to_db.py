@@ -8,7 +8,7 @@ from tqdm import tqdm
 def main():
     session = create_session()
 
-    frame = pandas_frame_from_csv_path('../btw17_kerg.csv', lines_to_skip=2, sep=';')
+    frame = pandas_frame_from_csv_path('btw17_kerg.csv', lines_to_skip=2, sep=';')
     # normalize_data_frame(frame)
 
     add_states(get_states(frame), session)
